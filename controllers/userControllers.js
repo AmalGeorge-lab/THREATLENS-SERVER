@@ -40,7 +40,7 @@ const userControllers = {
     response.cookie("sessionId" , accessToken , {
 			httpOnly : true ,
 			secure : process.env.NODE_ENV === "production" ,
-			sameSite : "lax" ,
+			sameSite : "none" ,
 			maxAge : 1 * 24 * 60 * 60 * 1000 ,
 			path : "/"
 		});
@@ -55,7 +55,7 @@ const userControllers = {
     response.clearCookie("sessionId" , {
 			httpOnly : true ,
 			secure : process.env.NODE_ENV === "production" ,
-			sameSite : "lax" ,
+			sameSite : "none" ,
 			path : "/"
 		});
 		response.status(200).json({status : "Logout success"});

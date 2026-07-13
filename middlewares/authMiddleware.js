@@ -11,7 +11,7 @@ const protect = async (req, res, next) => {
       res.clearCookie("sessionId" , {
         httpOnly : true ,
         secure : process.env.NODE_ENV === "production" ,
-        sameSite : "lax" ,
+        sameSite : "none" ,
         path : "/"
       });
       return next(new AppError("Session Expired", 401));
