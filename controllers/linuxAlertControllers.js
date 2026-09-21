@@ -1,7 +1,11 @@
-import Alert from "../models/Alert.js";
 import FileUpload from "../models/FileUpload.js";
+import LinuxAlert from "../models/LinuxAlert.js";
 
-const alertControllers = {
+
+
+
+
+const linuxAlertControllers = {
   alertsAPI : async (request,response,next) => {
     const {fileId} = request.query;
     const userId = request.user;
@@ -12,7 +16,7 @@ const alertControllers = {
     if(!file){
       return next(new AppError("File not found", 404));
     }
-    const alerts = await Alert.find({ fileUpload_id : fileId }).select("_id alert_id alert_type created_at severity rule_id rule_name status").sort({ created_at : 1 });
+    const alerts = await LinuxAlert.find({ fileUpload_id : fileId }).select("_id alert_id alert_type created_at severity rule_id rule_name status").sort({ created_at : 1 });
     response.status(200).json({file , alerts});
   } ,
   alertAPI : async (request,response,next) => {
@@ -20,7 +24,7 @@ const alertControllers = {
     if(!alertId){
       return next(new AppError("Alert Id is missing", 400));
     }
-    const alert = await Alert.findById(alertId).populate("relatedAlerts");
+    const alert = await LinuxAlert.findById(alertId).populate("relatedAlerts");
     if (!alert) {
       return next(new AppError("Alert not found.", 404));
     }
@@ -39,7 +43,7 @@ const alertControllers = {
     if (!allowedStatus.includes(status)) {
       return next(new AppError("Invalid status.", 400));
     }
-    const alert = await Alert.findById(alertId).populate({path: "fileUpload_id",select: "uploadedBy"});
+    const alert = await LinuxAlert.findById(alertId).populate({path: "fileUpload_id",select: "uploadedBy"});
     if (!alert ||alert.fileUpload_id.uploadedBy.toString() !== request.user) {
       return next(new AppError("Alert not found.", 404));
     }
@@ -69,7 +73,7 @@ const alertControllers = {
     if(attack !== "*"){
       filterDraft.alert_type = attack;
     }
-    const filteredAlerts = await Alert.find(filterDraft).select("_id alert_id alert_type severity status created_at rule_id rule_name");
+    const filteredAlerts = await LinuxAlert.find(filterDraft).select("_id alert_id alert_type severity status created_at rule_id rule_name");
     response.status(200).json(filteredAlerts);
   } ,
   deleteLogAPI : async (request,response,next) => {
@@ -81,7 +85,7 @@ const alertControllers = {
     if (!file) {
       return next(new AppError("File not found.", 404));
     }
-    await Alert.deleteMany({ fileUpload_id : file._id });
+    await LinuxAlert.deleteMany({ fileUpload_id : file._id });
     await FileUpload.findByIdAndDelete(file._id);
     response.status(200).json({ message : "log deleted" });
   } 
@@ -89,4 +93,4 @@ const alertControllers = {
 
 
 
-export default alertControllers;
+export default linuxAlertControllers;

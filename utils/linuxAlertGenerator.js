@@ -1,4 +1,4 @@
-import Alert from "../models/Alert.js";
+import LinuxAlert from "../models/LinuxAlert.js";
 
 const bruteAttackTypes = ["Classical Brute Force Attack","Root Account Brute Force Attack","Brute Force Account Success","Root Brute Force Account Success"];
 const distributedAttackTypes = ["Distributed Brute Force Attack","Root Account Distributed Brute Force Attack","Distributed Brute Force Attack Success","Root Account Distributed Brute Force Attack Success"];
@@ -11,7 +11,7 @@ const bruteAttackAlertGenerator = async (alert,file_id)=> {
   if (alert.relatedAlerts){
     const relatedAlertsIDs = await Promise.all(
       alert.relatedAlerts.map(async (a)=>{
-        const newAlert = await Alert.create({
+        const newAlert = await LinuxAlert.create({
           alert_id : a.alert_id ,
           fileUpload_id : file_id ,
           alert_type : a.alert_type ,
@@ -37,7 +37,7 @@ const bruteAttackAlertGenerator = async (alert,file_id)=> {
         return newAlert._id;
       })
     )
-    await Alert.create(
+    await LinuxAlert.create(
       {
         alert_id : alert.alert_id ,
         fileUpload_id : file_id ,
@@ -64,7 +64,7 @@ const bruteAttackAlertGenerator = async (alert,file_id)=> {
       }
     )
   }else{
-    await Alert.create(
+    await LinuxAlert.create(
       {
         alert_id : alert.alert_id ,
         fileUpload_id : file_id ,
@@ -98,7 +98,7 @@ const distributedAttackAlertGenerator = async (alert,file_id)=> {
   if(alert.relatedAlerts){
     const relatedAlertsIDs = await Promise.all(
       alert.relatedAlerts.map(async(a)=>{
-        const newAlert = await Alert.create({
+        const newAlert = await LinuxAlert.create({
           target_user : a.user ,
           fileUpload_id : file_id ,
           alert_id : a.alert_id ,
@@ -124,7 +124,7 @@ const distributedAttackAlertGenerator = async (alert,file_id)=> {
         return newAlert._id;
       })
     )
-    await Alert.create(
+    await LinuxAlert.create(
       {
         alert_id : alert.alert_id ,
         alert_type : alert.alert_type ,
@@ -152,7 +152,7 @@ const distributedAttackAlertGenerator = async (alert,file_id)=> {
       }
     )
   }else{
-    await Alert.create(
+    await LinuxAlert.create(
       {
         target_user : alert.user ,
         fileUpload_id : file_id ,
@@ -185,7 +185,7 @@ const distributedAttackAlertGenerator = async (alert,file_id)=> {
 
 
 const passwordSprayingAlertGenerator = async (alert,file_id)=> {
-  await Alert.create(
+  await LinuxAlert.create(
     {
       alert_id : alert.alert_id ,
       alert_type : alert.alert_type ,
@@ -217,7 +217,7 @@ const passwordSprayingAlertGenerator = async (alert,file_id)=> {
 
 
 const userEnumerationAlertGenerator = async (alert,file_id)=> {
-  await Alert.create({
+  await LinuxAlert.create({
     alert_id : alert.alert_id ,
     alert_type : alert.alert_type ,
     fileUpload_id : file_id ,
@@ -247,7 +247,7 @@ const userEnumerationAlertGenerator = async (alert,file_id)=> {
 
 
 
-export const alertGenerator = async (alerts, file_id) => {
+export const linuxAlertGenerator = async (alerts, file_id) => {
   await Promise.all(
     alerts.map((alert) => {
       if (bruteAttackTypes.includes(alert.alert_type)) {

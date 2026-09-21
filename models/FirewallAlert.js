@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
-
-const AlertSchema = new mongoose.Schema({
+const FirewallAlertSchema = new mongoose.Schema({
   alert_id : {
     type : String ,
     required : true ,
@@ -32,14 +31,6 @@ const AlertSchema = new mongoose.Schema({
     type : Number ,
     required : true
   } ,
-  target_user : {
-    type : String ,
-    default : null
-  } ,
-  relatedAlerts : [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Alert"
-  }] ,
   status : {
     type : String ,
     enum : ["OPEN","CLOSED"] ,
@@ -47,37 +38,37 @@ const AlertSchema = new mongoose.Schema({
   } ,
   source_ip : {
     type : String ,
+    reuqired : true
+  } ,
+  destination_ips : [{
+    type : String ,
+    required : true
+  }] ,
+  destination_ports : [{
+    type : Number ,
+    default : null
+  }] ,
+  source_ports : [{
+    type : Number ,
+    default : null
+  }] ,
+  accepted_destination_ports : [{
+    type : Number ,
+    default : null
+  }] ,
+  drop_count : {
+    type : Number ,
     default : null
   } ,
-  users : {
-    type : [String] ,
-    default : []
-  } ,
-  IPs : {
-    type : [String] ,
-    default : []
-  } ,
-  successIP : {
+  actions : [{
     type : String ,
     default : null
-  } ,
+  }] ,
   host : {
     type : String ,
     required : true
   } ,
   service : {
-    type : String ,
-    required : true
-  } ,
-  pid : {
-    type : Number ,
-    required : true
-  } ,
-  port : {
-    type : Number ,
-    required : true
-  } ,
-  protocol : {
     type : String ,
     required : true
   } ,
@@ -87,10 +78,6 @@ const AlertSchema = new mongoose.Schema({
   } ,
   mitre_name : {
     type : String ,
-    required : true
-  } ,
-  failed_attempts : {
-    type : Number ,
     required : true
   } ,
   starting_time : {
@@ -107,5 +94,4 @@ const AlertSchema = new mongoose.Schema({
   }
 });
 
-
-export default mongoose.model("Alert",AlertSchema);
+export default mongoose.model("FirewallAlert",FirewallAlertSchema);
